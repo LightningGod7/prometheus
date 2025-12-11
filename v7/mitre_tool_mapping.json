@@ -1,0 +1,156 @@
+{
+  "mitre_attack_tool_mapping": {
+    "reconnaissance": {
+      "description": "Gather information about targets",
+      "tools": [
+        "nmap_scan",
+        "gobuster_scan", 
+        "nuclei_scan",
+        "dirb_scan",
+        "ffuf_scan",
+        "feroxbuster_scan",
+        "hakrawler_crawl",
+        "paramspider_discovery",
+        "arjun_scan",
+        "monitor_cve_feeds",
+        "vulnerability_intelligence_dashboard"
+      ]
+    },
+    "resource_development": {
+      "description": "Establish resources to support operations",
+      "tools": [
+        "create_file",
+        "modify_file",
+        "generate_payload",
+        "msfvenom_generate",
+        "ai_generate_payload",
+        "ai_generate_attack_suite",
+        "advanced_payload_generation",
+        "generate_exploit_from_cve",
+        "install_python_package",
+        "execute_python_script"
+      ]
+    },
+    "initial_access": {
+      "description": "Gain initial foothold in target network",
+      "tools": [
+        "sqlmap_scan",
+        "xsser_scan",
+        "wfuzz_scan",
+        "dotdotpwn_scan",
+        "api_fuzzer",
+        "graphql_scanner",
+        "burpsuite_scan",
+        "zap_scan",
+        "ai_test_payload"
+      ]
+    },
+    "execution": {
+      "description": "Execute malicious code on target systems",
+      "tools": [
+        "metasploit_run",
+        "execute_python_script",
+        "execute_command",
+        "http_repeater"
+      ]
+    },
+    "persistence": {
+      "description": "Maintain access to systems",
+      "tools": [
+        "create_file",
+        "modify_file"
+      ]
+    },
+    "privilege_escalation": {
+      "description": "Gain higher-level permissions",
+      "tools": [
+        "binwalk_analyze",
+        "gdb_analyze",
+        "checksec_analyze",
+        "objdump_analyze",
+        "ropgadget_search",
+        "one_gadget_search",
+        "research_zero_day_opportunities"
+      ]
+    },
+    "defense_evasion": {
+      "description": "Avoid detection by security controls",
+      "tools": [
+        "msfvenom_generate",
+        "ai_generate_payload",
+        "advanced_payload_generation"
+      ]
+    },
+    "credential_access": {
+      "description": "Steal account names and passwords",
+      "tools": [
+        "hashcat_crack",
+        "jwt_analyzer"
+      ]
+    },
+    "discovery": {
+      "description": "Figure out environment and internal network",
+      "tools": [
+        "netexec_scan",
+        "smbmap_scan",
+        "list_files",
+        "wpscan_analyze",
+        "api_schema_analyzer",
+        "comprehensive_api_audit",
+        "discover_attack_chains"
+      ]
+    },
+    "lateral_movement": {
+      "description": "Move through the environment",
+      "tools": [
+        "netexec_scan",
+        "smbmap_scan"
+      ]
+    },
+    "collection": {
+      "description": "Gather information of interest",
+      "tools": [
+        "list_files",
+        "correlate_threat_intelligence",
+        "threat_hunting_assistant"
+      ]
+    },
+    "command_and_control": {
+      "description": "Communicate with compromised systems",
+      "tools": [
+        "http_set_rules",
+        "http_set_scope",
+        "http_repeater"
+      ]
+    },
+    "exfiltration": {
+      "description": "Steal data from the network",
+      "tools": [
+        "create_file",
+        "modify_file"
+      ]
+    },
+    "impact": {
+      "description": "Manipulate, interrupt, or destroy systems and data",
+      "tools": [
+        "delete_file",
+        "terminate_process",
+        "pause_process"
+      ]
+    },
+    "system_monitoring": {
+      "description": "Monitor system health and processes",
+      "tools": [
+        "server_health",
+        "get_cache_stats",
+        "clear_cache",
+        "get_telemetry",
+        "list_active_processes",
+        "get_process_status",
+        "resume_process",
+        "get_process_dashboard",
+        "error_handling_statistics"
+      ]
+    }
+  }
+}

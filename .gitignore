@@ -1,0 +1,67 @@
+# Sensitive files - API keys
+*.env
+.env
+*_config.json
+**/secrets/
+**/*_secret*.json
+
+# Nested repositories (manage separately)
+PentestGPT/
+autogen/
+hexstrike-ai/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Tool outputs
+*.pcap
+*.cap
+results/
+output/
+scans/
+

@@ -1,0 +1,611 @@
+{
+  "provider": "autogen_agentchat.teams.Swarm",
+  "component_type": "team",
+  "version": 2,
+  "component_version": 1,
+  "description": "ACE (Advanced Cybersecurity Execution) Team v7 - MITRE ATT&CK Specialized Agent Architecture",
+  "label": "ACE RedTeam Swarm v7 - MITRE Aligned",
+  "config": {
+    "participants": [
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Red Team Lead - Strategic coordinator and mission commander",
+        "label": "Red Team Lead",
+        "config": {
+          "name": "red_team_lead",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "label": "gpt-4o",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE",
+              "base_url": "https://api.openai.com/v1"
+            }
+          },
+          "workbench": [],
+          "handoffs": [
+            {
+              "target": "reconnaissance_specialist",
+              "description": "Delegate reconnaissance and target enumeration tasks",
+              "name": "request_reconnaissance",
+              "message": "RECONNAISSANCE REQUEST: Conduct information gathering and target enumeration with specified scope and objectives."
+            },
+            {
+              "target": "resource_development_specialist",
+              "description": "Request payload generation and infrastructure setup",
+              "name": "request_resource_development",
+              "message": "RESOURCE DEVELOPMENT REQUEST: Generate payloads, setup infrastructure, or prepare exploitation tools."
+            },
+            {
+              "target": "initial_access_specialist",
+              "description": "Execute initial access and exploitation attempts",
+              "name": "request_initial_access",
+              "message": "INITIAL ACCESS REQUEST: Attempt to gain initial foothold using specified attack vectors and targets."
+            },
+            {
+              "target": "discovery_specialist",
+              "description": "Conduct internal network and system discovery",
+              "name": "request_discovery",
+              "message": "DISCOVERY REQUEST: Enumerate internal systems, services, and network topology."
+            },
+            {
+              "target": "execution_credential_specialist",
+              "description": "Execute commands and harvest credentials",
+              "name": "request_execution_credentials",
+              "message": "EXECUTION/CREDENTIAL REQUEST: Execute commands or harvest credentials from compromised systems."
+            },
+            {
+              "target": "system_monitoring_specialist",
+              "description": "Monitor system health and manage processes",
+              "name": "request_system_monitoring",
+              "message": "MONITORING REQUEST: Check system health, manage processes, or collect telemetry data."
+            },
+            {
+              "target": "websurfer_agent",
+              "description": "Conduct OSINT research and web-based intelligence gathering",
+              "name": "request_web_research",
+              "message": "WEB RESEARCH REQUEST: Conduct OSINT research, gather intelligence from public sources, or verify information online."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Strategic mission commander with MITRE ATT&CK orchestration",
+          "system_message": "You are the Red Team Lead coordinating a MITRE ATT&CK-aligned specialist team. RULES OF ENGAGEMENT: Aggressive and investigative approach, all activities logged. Your workflow: 1) ANALYZE OBJECTIVES: Understand mission goals and target scope 2) TACTICAL PLANNING: Map objectives to MITRE ATT&CK tactics and select appropriate specialists 3) COORDINATE SPECIALISTS: Delegate tasks to specialized agents based on MITRE tactics 4) SYNTHESIZE RESULTS: Combine specialist reports into actionable intelligence 5) FINAL SUMMARY: Create comprehensive markdown assessment report with methodology, findings, and recommendations. SPECIALIST HANDOFFS: Use Reconnaissance (TA0043) for target enumeration, Resource Development (TA0042) for payload creation, Initial Access (TA0001) for exploitation, Discovery (TA0007) for internal enumeration, Execution/Credentials (TA0002/TA0006) for post-exploitation, System Monitoring for operational support, Web Research for OSINT. CRITICAL: When objectives are achieved, create a detailed markdown summary including: Executive Summary, Methodology Used, Key Findings, Attack Timeline, Compromised Assets, Recommendations, and Lessons Learned. End with 'TERMINATE' when complete.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": false,
+          "tool_call_summary_format": "{result}",
+          "max_tool_iterations": 1,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Reconnaissance Specialist - MITRE ATT&CK TA0043",
+        "label": "Reconnaissance Specialist",
+        "config": {
+          "name": "reconnaissance_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike Reconnaissance MCP - Information gathering and target enumeration",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/reconnaissance_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 300
+                }
+              },
+              "label": "Reconnaissance MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report reconnaissance findings to Red Team Lead",
+              "name": "report_reconnaissance_results",
+              "message": "RECONNAISSANCE COMPLETE: Target enumeration and information gathering results with discovered assets, services, and vulnerabilities."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Information gathering and target enumeration specialist",
+          "system_message": "You are the Reconnaissance Specialist (MITRE ATT&CK TA0043). Your mission: gather information about targets before and during operations. When receiving reconnaissance requests: 1) ACKNOWLEDGE: Confirm reconnaissance scope and objectives 2) EXECUTE RECONNAISSANCE: Use Nmap, Gobuster, Nuclei, Ffuf, Feroxbuster, Hakrawler, ParamSpider, CVE monitoring tools 3) ANALYZE FINDINGS: Identify high-value targets, services, vulnerabilities, and attack surfaces 4) REPORT RESULTS: Provide structured intelligence with prioritized targets and recommended next steps. Focus on OSINT, active scanning, vulnerability identification, and attack surface mapping.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"findings\":\"{result}\"}",
+          "max_tool_iterations": 5,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Resource Development Specialist - MITRE ATT&CK TA0042",
+        "label": "Resource Development Specialist",
+        "config": {
+          "name": "resource_development_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike Resource Development MCP - Payload generation and infrastructure setup",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/resource_development_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 300
+                }
+              },
+              "label": "Resource Development MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report resource development completion to Red Team Lead",
+              "name": "report_resource_development_results",
+              "message": "RESOURCE DEVELOPMENT COMPLETE: Payloads generated, infrastructure prepared, and tools configured for operational use."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Payload generation and infrastructure setup specialist",
+          "system_message": "You are the Resource Development Specialist (MITRE ATT&CK TA0042). Your mission: establish resources to support operations. When receiving resource development requests: 1) ACKNOWLEDGE: Confirm resource requirements and specifications 2) DEVELOP RESOURCES: Create files, generate payloads (buffer, cyclic, shellcode), use MSFVenom, AI payload generation, install Python packages, execute scripts 3) CUSTOMIZE TOOLS: Adapt payloads for specific targets and evasion requirements 4) REPORT COMPLETION: Provide resource inventory and usage instructions. Focus on malware development, exploit creation, infrastructure setup, and operational tool preparation.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"resources_created\":\"{result}\"}",
+          "max_tool_iterations": 5,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Initial Access Specialist - MITRE ATT&CK TA0001",
+        "label": "Initial Access Specialist",
+        "config": {
+          "name": "initial_access_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike Initial Access MCP - Exploitation and entry point tools",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/initial_access_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 600
+                }
+              },
+              "label": "Initial Access MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report initial access attempts and results to Red Team Lead",
+              "name": "report_initial_access_results",
+              "message": "INITIAL ACCESS COMPLETE: Exploitation attempts executed with success/failure status, compromised systems, and established footholds."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Exploitation and initial foothold specialist",
+          "system_message": "You are the Initial Access Specialist (MITRE ATT&CK TA0001). Your mission: gain initial foothold in target systems. When receiving initial access requests: 1) ACKNOWLEDGE: Confirm targets and attack vectors 2) EXECUTE ATTACKS: Use SQLMap, XSSer, Wfuzz, DotDotPwn, API fuzzing, GraphQL scanning, Burp Suite, ZAP, AI payload testing 3) VALIDATE ACCESS: Confirm successful exploitation and establish persistence 4) REPORT RESULTS: Document compromised systems, access levels, and recommended next steps. Focus on web application attacks, API exploitation, and public-facing service compromise.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"exploitation_result\":\"{result}\"}",
+          "max_tool_iterations": 5,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Discovery Specialist - MITRE ATT&CK TA0007",
+        "label": "Discovery Specialist",
+        "config": {
+          "name": "discovery_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike Discovery MCP - Internal network and system enumeration",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/discovery_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 300
+                }
+              },
+              "label": "Discovery MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report discovery findings to Red Team Lead",
+              "name": "report_discovery_results",
+              "message": "DISCOVERY COMPLETE: Internal network enumeration and system discovery results with identified assets, services, and lateral movement opportunities."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Internal network and system enumeration specialist",
+          "system_message": "You are the Discovery Specialist (MITRE ATT&CK TA0007). Your mission: gather information about the internal environment. When receiving discovery requests: 1) ACKNOWLEDGE: Confirm discovery scope and objectives 2) ENUMERATE SYSTEMS: Use NetExec, SMBMap, file listing, WPScan, API schema analysis, comprehensive API audits 3) MAP ENVIRONMENT: Identify network topology, services, applications, and potential lateral movement paths 4) REPORT FINDINGS: Provide network maps, service inventories, and prioritized targets for further exploitation. Focus on system discovery, network share enumeration, and service identification.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"discoveries\":\"{result}\"}",
+          "max_tool_iterations": 5,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "Execution & Credential Access Specialist - MITRE ATT&CK TA0002/TA0006",
+        "label": "Execution & Credential Access Specialist",
+        "config": {
+          "name": "execution_credential_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike Execution & Credential Access MCP - Command execution and credential harvesting",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/execution_credential_access_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 600
+                }
+              },
+              "label": "Execution & Credential Access MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report execution and credential harvesting results to Red Team Lead",
+              "name": "report_execution_credential_results",
+              "message": "EXECUTION/CREDENTIAL ACCESS COMPLETE: Commands executed and credentials harvested with access levels, extracted data, and privilege escalation opportunities."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "Command execution and credential harvesting specialist",
+          "system_message": "You are the Execution & Credential Access Specialist (MITRE ATT&CK TA0002/TA0006). Your mission: execute code and harvest credentials on compromised systems. When receiving execution/credential requests: 1) ACKNOWLEDGE: Confirm execution targets and credential objectives 2) EXECUTE OPERATIONS: Use Metasploit, command execution, HTTP repeater, Hashcat, JWT analysis, credential harvesting, Mimikatz simulation, browser credential extraction 3) HARVEST CREDENTIALS: Extract passwords, hashes, tokens, and authentication materials 4) REPORT RESULTS: Document executed commands, harvested credentials, and privilege escalation opportunities. Focus on post-exploitation activities and credential acquisition.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"execution_result\":\"{result}\"}",
+          "max_tool_iterations": 5,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.AssistantAgent",
+        "component_type": "agent",
+        "version": 2,
+        "component_version": 2,
+        "description": "System Monitoring Specialist - Operational Support",
+        "label": "System Monitoring Specialist",
+        "config": {
+          "name": "system_monitoring_specialist",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE"
+            }
+          },
+          "workbench": [
+            {
+              "provider": "autogen_ext.tools.mcp.McpWorkbench",
+              "component_type": "workbench",
+              "version": 1,
+              "component_version": 1,
+              "description": "HexStrike System Monitoring MCP - Health monitoring and process management",
+              "config": {
+                "server_params": {
+                  "type": "StdioServerParams",
+                  "command": "python3",
+                  "args": [
+                    "/home/zeus/prometheus/v7/system_monitoring_mcp.py"
+                  ],
+                  "env": {},
+                  "read_timeout_seconds": 30
+                }
+              },
+              "label": "System Monitoring MCP"
+            }
+          ],
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report system monitoring and operational status to Red Team Lead",
+              "name": "report_system_monitoring_results",
+              "message": "SYSTEM MONITORING COMPLETE: System health status, process management results, and operational telemetry data."
+            }
+          ],
+          "model_context": {
+            "provider": "autogen_core.model_context.UnboundedChatCompletionContext",
+            "component_type": "chat_completion_context",
+            "version": 1,
+            "component_version": 1,
+            "description": "An unbounded chat completion context that keeps a view of the all the messages.",
+            "label": "UnboundedChatCompletionContext",
+            "config": {}
+          },
+          "description": "System health monitoring and process management specialist",
+          "system_message": "You are the System Monitoring Specialist providing operational support. Your mission: maintain system health and manage operational processes. When receiving monitoring requests: 1) ACKNOWLEDGE: Confirm monitoring scope and requirements 2) MONITOR SYSTEMS: Check server health, cache statistics, telemetry collection, process management, dashboard generation 3) MANAGE PROCESSES: List, monitor, terminate, pause, or resume processes as needed 4) REPORT STATUS: Provide system health reports, performance metrics, and operational recommendations. Focus on maintaining operational security and system performance during red team exercises.",
+          "model_client_stream": false,
+          "reflect_on_tool_use": true,
+          "tool_call_summary_format": "{\"tool_name\":\"{tool_name}\",\"status\":\"{status}\",\"monitoring_result\":\"{result}\"}",
+          "max_tool_iterations": 3,
+          "metadata": {}
+        }
+      },
+      {
+        "provider": "autogen_ext.agents.web_surfer.MultimodalWebSurfer",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "An agent that solves tasks by browsing the web using a headless browser.",
+        "label": "Web Surfer Agent",
+        "config": {
+          "name": "websurfer_agent",
+          "model_client": {
+            "provider": "autogen_ext.models.openai.OpenAIChatCompletionClient",
+            "component_type": "model",
+            "version": 1,
+            "component_version": 1,
+            "description": "GPT-4o model",
+            "label": "gpt-4o",
+            "config": {
+              "model": "gpt-4o",
+              "temperature": 0.7,
+              "max_tokens": 16384,
+              "api_key": "YOUR_OPENAI_API_KEY_HERE",
+              "base_url": "https://api.openai.com/v1",
+              "model_info": {
+                "vision": false,
+                "function_calling": true,
+                "json_output": true,
+                "family": "GPT",
+                "structured_output": true
+              }
+            }
+          },
+          "handoffs": [
+            {
+              "target": "red_team_lead",
+              "description": "Report web research findings to Red Team Lead",
+              "name": "report_web_research_results",
+              "message": "WEB RESEARCH COMPLETE: OSINT findings, intelligence gathered from public sources, and verified information with actionable insights."
+            }
+          ],
+          "description": "OSINT and web-based intelligence gathering specialist",
+          "system_message": "You are the Web Research Specialist conducting OSINT and web-based intelligence gathering. When receiving web research requests: 1) ACKNOWLEDGE: Confirm research objectives and scope 2) CONDUCT RESEARCH: Search for target information, company details, employee data, technology stacks, vulnerabilities, breach data, and public exposure 3) VERIFY INFORMATION: Cross-reference findings across multiple sources 4) REPORT RESULTS: Provide structured intelligence with source citations and confidence levels. Focus on gathering actionable intelligence that supports red team operations while maintaining operational security.",
+          "headless": true,
+          "start_page": "https://www.google.com/",
+          "animate_actions": false,
+          "to_save_screenshots": false,
+          "use_ocr": false,
+          "to_resize_viewport": true,
+          "downloads_folder": "/tmp/redteam-downloads",
+          "debug_dir": "/tmp/redteam-debug"
+        }
+      },
+      {
+        "provider": "autogen_agentchat.agents.UserProxyAgent",
+        "component_type": "agent",
+        "version": 1,
+        "component_version": 1,
+        "description": "An agent that can represent a human user through an input function.",
+        "label": "UserProxyAgent",
+        "config": {
+          "name": "user_proxy",
+          "description": "a human user that should be consulted only when the assistant_agent is unable to verify the information provided by the websurfer_agent"
+        }
+      }
+    ],
+    "termination_condition": {
+      "provider": "autogen_agentchat.base.OrTerminationCondition",
+      "component_type": "termination",
+      "version": 1,
+      "component_version": 1,
+      "label": "OrTerminationCondition",
+      "config": {
+        "conditions": [
+          {
+            "provider": "autogen_agentchat.conditions.TextMentionTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Terminate when Red Team Lead confirms objectives achieved",
+            "label": "TextMentionTermination",
+            "config": {
+              "text": "TERMINATE"
+            }
+          },
+          {
+            "provider": "autogen_agentchat.conditions.MaxMessageTermination",
+            "component_type": "termination",
+            "version": 1,
+            "component_version": 1,
+            "description": "Safety net - terminate after 100 messages for complex operations",
+            "label": "MaxMessageTermination",
+            "config": {
+              "max_messages": 100,
+              "include_agent_event": false
+            }
+          }
+        ]
+      }
+    },
+    "emit_team_events": false
+  }
+}
