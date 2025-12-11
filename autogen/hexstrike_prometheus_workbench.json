@@ -1,0 +1,22 @@
+{
+  "provider": "autogen_ext.tools.mcp.McpWorkbench",
+  "component_type": "workbench",
+  "version": 1,
+  "component_version": 1,
+  "description": "HexStrike Prometheus - Essential Security Tools Only (<128 tools). Optimized for AutoGen with OpenAI API compatibility. Excludes forensics, cloud, wireless, and OSINT tools.",
+  "label": "HexStrike Prometheus MCP Workbench",
+  "config": {
+    "server_params": {
+      "type": "StdioServerParams",
+      "command": "python3",
+      "args": [
+        "/home/zeus/prometheus/autogen/hexstrike_prometheus.py",
+        "--server",
+        "http://192.168.7.117:8888"
+      ],
+      "read_timeout_seconds": 1800,
+      "env": {}
+    },
+    "tool_overrides": {}
+  }
+}

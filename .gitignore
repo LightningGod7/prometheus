@@ -7,8 +7,6 @@
 
 # Nested repositories (manage separately)
 PentestGPT/
-autogen/
-hexstrike-ai/
 
 # Python
 __pycache__/
